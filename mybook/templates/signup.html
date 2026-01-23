@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyBook login</title>
+    <title>MyBook register</title>
 
     <style>
 
@@ -161,24 +161,29 @@
         <!-- LEFT LOGIN -->
         <div class="login-section">
             <div class="login-box">
-                <h1>Welcome Back</h1>
+                <h1>Welcome</h1>
                 <p>Access your personal workspace without any Google login.</p>
 
                 <form>
                     <div class="input-group">
                         <label for="username">Username</label>
-                        <input type="text" id="username" placeholder="Enter your username">
+                        <input type="text" id="username" placeholder="Create username">
                     </div>
 
                     <div class="input-group">
                         <label for="password">Password</label>
-                        <input type="password" id="password" placeholder="Enter your password">
+                        <input type="password" id="password" placeholder="Create password">
                     </div>
 
-                    <button class="login-btn">Login</button>
+                    <div class="input-group">
+                        <label for="cpassword">Confirm Password</label>
+                        <input type="password" id="cpassword" placeholder="Confirm password">
+                    </div>
+
+                    <button class="login-btn">Register</button>
                     <br>
                     <div class="footer-text">
-                    Don't have an account? <a style="color:darkgreen;" href="/signup/">Register</a>
+                    Already have an account? <a style="color:darkgreen;" href="/">Login</a>
                 </div>
                 </form>
 
