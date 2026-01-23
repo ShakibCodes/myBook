@@ -3,9 +3,201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>MyBook login</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #e9f5ee;
+        }
+
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+    
+        .login-section {
+            flex: 1;
+            background: #f6fff9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .login-box {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-box h1 {
+            color: #1b5e3c;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+
+        .login-box p {
+            color: #4f7f66;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: #2f6f4f;
+            font-size: 0.9rem;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 8px;
+            border: 1px solid #b7dbc6;
+            outline: none;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: #2e8b57;
+            box-shadow: 0 0 0 2px rgba(46, 139, 87, 0.2);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: #2e8b57;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .login-btn:hover {
+            background: #256f46;
+        }
+
+        .footer-text {
+            margin-top: 25px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #5f8f75;
+        }
+
+  
+        .image-section {
+            flex: 1;
+            background-image: url("https://images.unsplash.com/photo-1508780709619-79562169bc64");
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(20, 80, 50, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            color: #eafff4;
+            text-align: center;
+        }
+
+        .overlay h2 {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+        }
+
+        .overlay p {
+            font-size: 1rem;
+            max-width: 400px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .image-section {
+                min-height: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-box h1 {
+                font-size: 1.7rem;
+            }
+
+            .overlay h2 {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Shakib</h1>
+
+    <div class="container">
+
+        <!-- LEFT LOGIN -->
+        <div class="login-section">
+            <div class="login-box">
+                <h1>Welcome Back</h1>
+                <p>Access your personal workspace without any Google login.</p>
+
+                <form>
+                    <div class="input-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" placeholder="Enter your username">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" placeholder="Enter your password">
+                    </div>
+
+                    <button class="login-btn">Login</button>
+                </form>
+
+                <div class="footer-text">
+                    Your files. Your folders. No third-party accounts.
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT IMAGE -->
+        <div class="image-section">
+            <div class="overlay">
+                <div>
+                    <h2>Your Own Cloud Space</h2>
+                    <p>
+                        Create, manage, and store your practical files securely
+                        without logging into Google or any external platform.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
 </body>
 </html>
