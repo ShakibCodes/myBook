@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyBook - Setup Profile</title>
+
+    <style>
+        /* Keeping styles consistent with your login/signup */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #e9f5ee;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .setup-section {
+            flex: 1;
+            background: #f6fff9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .setup-box {
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .setup-box h1 {
+            color: #1b5e3c;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+
+        .setup-box p {
+            color: #4f7f66;
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+        }
+
+        /* Profile Photo Upload Styles */
+        .profile-upload {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .avatar-preview {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            background: #d4e9dd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            border: 3px solid #b7dbc6;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .avatar-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none; /* Hidden until user selects image */
+        }
+
+        .avatar-preview i {
+            font-size: 2.5rem;
+            color: #2e8b57;
+        }
+
+        .file-input-label {
+            color: #2e8b57;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        #profile-photo {
+            display: none;
+        }
+
+        /* Form Layout */
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: #2f6f4f;
+            font-size: 0.9rem;
+        }
+
+        .input-group input, .input-group textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 8px;
+            border: 1px solid #b7dbc6;
+            outline: none;
+            font-size: 1rem;
+            transition: 0.3s;
+            resize: none;
+        }
+
+        .input-group input:focus, .input-group textarea:focus {
+            border-color: #2e8b57;
+            box-shadow: 0 0 0 2px rgba(46, 139, 87, 0.15);
+        }
+
+        .finish-btn {
+            width: 100%;
+            padding: 14px;
+            background: #2e8b57;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        .finish-btn:hover {
+            background: #256f46;
+        }
+
+        .skip-text {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: #5f8f75;
+            text-decoration: none;
+        }
+
+        /* Right Side Image Section (Consistent with Auth) */
+        .image-section {
+            flex: 1;
+            background-image: url("https://images.unsplash.com/photo-1508780709619-79562169bc64");
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(20, 80, 50, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            color: #eafff4;
+            text-align: center;
+        }
+
+        @media (max-width: 900px) {
+            .container { flex-direction: column-reverse; }
+            .image-section { min-height: 200px; }
+            .setup-section { padding: 30px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="setup-section">
+            <div class="setup-box">
+                <h1>Almost there!</h1>
+                <p>Personalize your space so others know whose cloud they are visiting.</p>
+
+                <form>
+                    <div class="profile-upload">
+                        <div class="avatar-preview" id="previewContainer">
+                            <svg id="placeholderIcon" width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#2e8b57" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                            <img id="imagePreview" src="" alt="Profile Preview">
+                        </div>
+                        <label for="profile-photo" class="file-input-label">Upload Profile Photo</label>
+                        <input type="file" id="profile-photo" accept="image/*" onchange="previewImage(event)">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="display-name">Display Name</label>
+                        <input type="text" id="display-name" placeholder="How should you appear?">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="about">About (Optional)</label>
+                        <textarea id="about" rows="4" placeholder="Brief description of your workspace..."></textarea>
+                    </div>
+
+                    <button type="submit" class="finish-btn">Finish Setup</button>
+                    <a href="/dashboard/" class="skip-text">Skip for now</a>
+                </form>
+            </div>
+        </div>
+
+        <div class="image-section">
+            <div class="overlay">
+                <div>
+                    <h2>Personalize Your Identity</h2>
+                    <p>Your profile is how friends and collaborators will recognize your shared folders.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple function to preview the image before uploading
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                const output = document.getElementById('imagePreview');
+                const icon = document.getElementById('placeholderIcon');
+                output.src = reader.result;
+                output.style.display = 'block';
+                icon.style.display = 'none';
+            }
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
+</body>
+</html>
