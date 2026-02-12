@@ -21,5 +21,6 @@ from . import views as v
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', v.login),
-    path('signup/', v.signup)
+    path('signup/', v.signup),
+    path('setup/', v.setup)
 ]
