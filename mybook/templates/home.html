@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyBook - Home</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Segoe UI", sans-serif; }
+        body { background: #e9f5ee; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        
+        .profile-card {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .profile-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #2e8b57;
+            margin-bottom: 20px;
+        }
+
+        .no-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: #d4e9dd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: #2e8b57;
+            font-weight: bold;
+        }
+
+        h1 { color: #1b5e3c; margin-bottom: 5px; }
+        h3 { color: #2e8b57; font-weight: 500; margin-bottom: 15px; }
+        p { color: #5f8f75; line-height: 1.6; margin-bottom: 25px; }
+
+        .logout-btn {
+            display: inline-block;
+            padding: 10px 25px;
+            background: #e74c3c;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+        .logout-btn:hover { background: #c0392b; }
+    </style>
+</head>
+<body>
+
+    <div class="profile-card">
+        {% if user.profile_photo %}
+            <img src="{{ user.profile_photo.url }}" alt="Profile" class="profile-img">
+        {% else %}
+            <div class="no-img">No Photo</div>
+        {% endif %}
+
+        <h1>Hello, {{ user.username }}!</h1>
+        <h3>{{ user.display_name|default:"No Display Name set" }}</h3>
+        
+        <p>{{ user.about|default:"No description provided yet." }}</p>
+
+        <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+    </div>
+
+</body>
+</html>

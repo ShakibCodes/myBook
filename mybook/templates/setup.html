@@ -187,29 +187,29 @@
                 <h1>Almost there!</h1>
                 <p>Personalize your space so others know whose cloud they are visiting.</p>
 
-                <form>
-                    <div class="profile-upload">
-                        <div class="avatar-preview" id="previewContainer">
-                            <svg id="placeholderIcon" width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#2e8b57" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                            <img id="imagePreview" src="" alt="Profile Preview">
-                        </div>
-                        <label for="profile-photo" class="file-input-label">Upload Profile Photo</label>
-                        <input type="file" id="profile-photo" accept="image/*" onchange="previewImage(event)">
-                    </div>
+                <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="profile-upload">
+        <div class="avatar-preview" id="previewContainer">
+            <svg id="placeholderIcon" ...></svg>
+            <img id="imagePreview" src="" alt="Profile Preview">
+        </div>
+        <label for="profile-photo" class="file-input-label">Upload Profile Photo</label>
+        <input type="file" name="profile-photo" id="profile-photo" accept="image/*" onchange="previewImage(event)">
+    </div>
 
-                    <div class="input-group">
-                        <label for="display-name">Display Name</label>
-                        <input type="text" id="display-name" placeholder="How should you appear?">
-                    </div>
+    <div class="input-group">
+        <label for="display-name">Display Name</label>
+        <input type="text" name="display-name" id="display-name" placeholder="How should you appear?">
+    </div>
 
-                    <div class="input-group">
-                        <label for="about">About (Optional)</label>
-                        <textarea id="about" rows="4" placeholder="Brief description of your workspace..."></textarea>
-                    </div>
+    <div class="input-group">
+        <label for="about">About (Optional)</label>
+        <textarea name="about" id="about" rows="4" placeholder="Brief description..."></textarea>
+    </div>
 
-                    <button type="submit" class="finish-btn">Finish Setup</button>
-                    <a href="/dashboard/" class="skip-text">Skip for now</a>
-                </form>
+    <button type="submit" class="finish-btn">Finish Setup</button>
+</form>
             </div>
         </div>
 
@@ -224,7 +224,6 @@
     </div>
 
     <script>
-        // Simple function to preview the image before uploading
         function previewImage(event) {
             const reader = new FileReader();
             reader.onload = function() {

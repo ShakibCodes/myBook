@@ -164,28 +164,25 @@
                 <h1>Welcome</h1>
                 <p>Access your personal workspace without any Google login.</p>
 
-                <form>
-                    <div class="input-group">
-                        <label for="username">Username</label>
-                        <input type="text" id="username" placeholder="Create username">
-                    </div>
+                <form method="POST">
+    {% csrf_token %}
+    <div class="input-group">
+        <label for="username">Username</label>
+        <input type="text" name="username" id="username" placeholder="Create username" required>
+    </div>
 
-                    <div class="input-group">
-                        <label for="password">Password</label>
-                        <input type="password" id="password" placeholder="Create password">
-                    </div>
+    <div class="input-group">
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" placeholder="Create password" required>
+    </div>
 
-                    <div class="input-group">
-                        <label for="cpassword">Confirm Password</label>
-                        <input type="password" id="cpassword" placeholder="Confirm password">
-                    </div>
+    <div class="input-group">
+        <label for="cpassword">Confirm Password</label>
+        <input type="password" name="cpassword" id="cpassword" placeholder="Confirm password" required>
+    </div>
 
-                    <button class="login-btn">Register</button>
-                    <br>
-                    <div class="footer-text">
-                    Already have an account? <a style="color:darkgreen;" href="/">Login</a>
-                </div>
-                </form>
+    <button type="submit" class="login-btn">Register</button>
+</form>
 
                 <div class="footer-text">
                     Your files. Your folders. No third-party accounts.

@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth import authenticate, login as auth_login, logout
 from django.contrib.auth.decorators import login_required
 from accounts.models import User
+
 
 
 def signup_view(request):
@@ -45,3 +46,7 @@ def setup_view(request):
 def home_view(request):
     # Rule 1: Non-logged users are restricted by @login_required
     return render(request, "home.html")
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')
