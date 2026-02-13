@@ -125,7 +125,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 MEDIA_URL = '/media/'
+LOGIN_REDIRECT_URL = 'home'
+LOGIN_URL = 'login'
+LOGOUT_REDIRECT_URL = 'login'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-
-# testing CNP tool from my project

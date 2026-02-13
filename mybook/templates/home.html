@@ -17,7 +17,7 @@
 
         body { display: flex; height: 100vh; background: var(--main-bg); overflow: hidden; }
 
-        /* Sidebar Styling */
+     
         .sidebar {
             width: 260px;
             background: var(--sidebar-bg);
@@ -44,7 +44,7 @@
 
         .nav-link:hover, .nav-link.active { background: rgba(255,255,255,0.1); color: white; }
 
-        /* Main Content */
+     
         .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
 
         .top-bar {
@@ -88,7 +88,7 @@
 
         .add-btn:hover { transform: rotate(90deg) scale(1.1); }
 
-        /* Grid for Folders */
+      
         .content-grid { padding: 40px; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 25px; }
 
         .folder-card {
@@ -114,12 +114,12 @@
             font-weight: 600;
         }
 
-        /* Create Folder Modal */
+      
         .modal-overlay {
             position: fixed;
             inset: 0;
             background: rgba(0,0,0,0.4);
-            display: none; /* Hidden by default */
+            display: none; 
             justify-content: center;
             align-items: center;
             z-index: 1000;
@@ -170,8 +170,10 @@
     <main class="main-content">
         <header class="top-bar">
             <div class="search-box">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Search folders or files...">
+                <form method="GET" action="{% url 'home' %}" class="search-box">
+    <i class="fas fa-search"></i>
+    <input type="text" name="q" placeholder="Search folders..." value="{{ request.GET.q }}">
+    <button type="submit" style="display:none"></button> </form>
             </div>
             <button class="add-btn" onclick="toggleModal()"><i class="fas fa-plus"></i></button>
         </header>
@@ -188,14 +190,14 @@
     <div class="modal-overlay" id="folderModal">
         <div class="modal-card">
             <h3>New Folder</h3>
-            <form action="#" method="POST">
-                <input type="text" placeholder="Folder Name" required>
-                <textarea rows="3" placeholder="Short description..."></textarea>
-                <div class="modal-btns">
-                    <button type="button" class="btn-cancel" onclick="toggleModal()">Cancel</button>
-                    <button type="submit" class="btn-create">Create</button>
-                </div>
-            </form>
+            <form action="{% url 'home' %}" method="POST">
+    {% csrf_token %} <input type="text" name="name" placeholder="Folder Name" required>
+    <textarea name="description" rows="3" placeholder="Short description..."></textarea>
+    <div class="modal-btns">
+        <button type="button" class="btn-cancel" onclick="toggleModal()">Cancel</button>
+        <button type="submit" class="btn-create">Create</button>
+    </div>
+</form>
         </div>
     </div>
 

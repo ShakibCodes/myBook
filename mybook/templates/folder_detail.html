@@ -72,11 +72,13 @@
     <hr>
 
     <div class="upload-section">
+    <form method="POST" enctype="multipart/form-data"> {% csrf_token %}
         <label class="upload-btn">
             <i class="fas fa-cloud-upload-alt"></i> Upload Files
-            <input type="file" multiple hidden>
+            <input type="file" name="files" multiple hidden onchange="this.form.submit()">
         </label>
-    </div>
+    </form>
+</div>
 
     <div class="file-preview-grid">
         <div class="file-preview-card">
