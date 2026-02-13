@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Folder Content</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background: #f6fff9; padding: 40px; font-family: 'Segoe UI', sans-serif; }
+        
+        .header-section { margin-bottom: 30px; }
+        
+        .back-btn {
+            font-size: 1.5rem;
+            color: #2e8b57;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 20px;
+            transition: 0.3s;
+        }
+        .back-btn:hover { transform: translateX(-5px); }
+
+        .folder-title { font-size: 2.5rem; color: #1b5e3c; margin-bottom: 10px; }
+        .folder-desc { color: #5f8f75; font-size: 1.1rem; }
+
+        hr { border: none; border-top: 1px solid #d4e9dd; margin: 30px 0; }
+
+        .upload-section {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .upload-btn {
+            background: #2e8b57;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .file-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 20px;
+        }
+
+        .file-preview-card {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid #e0ede5;
+        }
+        
+        .file-preview-card i { font-size: 2.5rem; color: #2e8b57; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+    <a href="{% url 'home' %}" class="back-btn"><i class="fas fa-chevron-left"></i></a>
+
+    <div class="header-section">
+        <h1 class="folder-title">Project Alpha</h1>
+        <p class="folder-desc">All files related to the initial phase of the project.</p>
+    </div>
+
+    <hr>
+
+    <div class="upload-section">
+        <label class="upload-btn">
+            <i class="fas fa-cloud-upload-alt"></i> Upload Files
+            <input type="file" multiple hidden>
+        </label>
+    </div>
+
+    <div class="file-preview-grid">
+        <div class="file-preview-card">
+            <i class="fas fa-file-image"></i>
+            <p>Design.jpg</p>
+        </div>
+    </div>
+
+</body>
+</html>

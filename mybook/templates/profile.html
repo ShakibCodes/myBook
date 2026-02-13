@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyBook - {{ user.username }}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2e8b57;
+            --primary-dark: #1b5e3c;
+            --bg: #e9f5ee;
+            --white: #ffffff;
+            --text-main: #2c3e50;
+            --text-sub: #5f8f75;
+            --glass: rgba(255, 255, 255, 0.9);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', 'Segoe UI', sans-serif; }
+
+        body {
+            background: radial-gradient(circle at top left, #e9f5ee, #d4e9dd);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .profile-container {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            width: 100%;
+            max-width: 450px;
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            border: 1px solid rgba(255,255,255,0.5);
+            text-align: center;
+            animation: slideUp 0.6s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .profile-img-wrapper {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 25px;
+        }
+
+        .profile-img, .no-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid var(--white);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .no-img {
+            background: #d4e9dd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--primary);
+        }
+
+        .profile-img-wrapper:hover .profile-img {
+            transform: scale(1.05);
+        }
+
+        .user-info h1 {
+            color: var(--primary-dark);
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .username-tag {
+            display: inline-block;
+            background: rgba(46, 139, 87, 0.1);
+            color: var(--primary);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .about-text {
+            color: var(--text-sub);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            padding: 0 10px;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 14px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: 0.3s all;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-edit {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 15px rgba(46, 139, 87, 0.3);
+        }
+
+        .btn-edit:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(46, 139, 87, 0.4);
+        }
+
+        .btn-logout {
+            background: #fff;
+            color: #e74c3c;
+            border: 2px solid #feeaea;
+        }
+
+        .btn-logout:hover {
+            background: #fff5f5;
+            border-color: #f5b7b1;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .profile-container { padding: 30px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="profile-container">
+        <div class="profile-img-wrapper">
+            {% if user.profile_photo %}
+                <img src="{{ user.profile_photo.url }}" alt="Profile" class="profile-img">
+            {% else %}
+                <div class="no-img"><i class="fas fa-user"></i></div>
+            {% endif %}
+        </div>
+
+        <div class="user-info">
+            <h1>{{ user.display_name|default:user.username }}</h1>
+            <span class="username-tag">@{{ user.username }}</span>
+            <p class="about-text">{{ user.about|default:"No description provided yet. Share something about yourself!" }}</p>
+        </div>
+
+        <div class="btn-group">
+            <a href="{% url 'edit_profile' %}" class="btn btn-edit">
+                <i class="fas fa-pen-nib"></i> Edit Profile
+            </a>
+            <a href="{% url 'logout' %}" class="btn btn-logout">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>
