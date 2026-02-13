@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <style>
+        /* Shared Styles */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background: #e9f5ee; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+
+        .edit-card {
+            background: white;
+            width: 100%;
+            max-width: 450px;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        h2 { color: #1b5e3c; margin-bottom: 25px; text-align: center; }
+
+        .input-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; color: #2f6f4f; font-weight: 600; font-size: 0.9rem; }
+        
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #b7dbc6;
+            border-radius: 10px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input[type="text"]:focus, textarea:focus {
+            border-color: #2e8b57;
+            box-shadow: 0 0 0 3px rgba(46, 139, 87, 0.1);
+        }
+
+        .footer-btns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .btn-save { background: #2e8b57; color: white; }
+        .btn-save:hover { background: #256f46; }
+
+        .btn-cancel { background: #f2f2f2; color: #666; }
+        .btn-cancel:hover { background: #e5e5e5; }
+        
+        .photo-upload { text-align: center; margin-bottom: 20px; }
+        #imagePreview { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; display: none; }
+    </style>
+</head>
+<body>
+    <div class="edit-card">
+        <h2>Edit Profile</h2>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="photo-upload">
+                <img id="imagePreview" src="#" alt="Preview">
+                <label for="profile_photo" style="cursor: pointer; color: #2e8b57; text-decoration: underline;">Change Profile Photo</label>
+                <input type="file" name="profile_photo" id="profile_photo" hidden onchange="previewImg(event)">
+            </div>
+
+            <div class="input-group">
+                <label>Display Name</label>
+                <input type="text" name="display_name" value="{{ user.display_name|default:'' }}" placeholder="Enter display name">
+            </div>
+
+            <div class="input-group">
+                <label>About</label>
+                <textarea name="about" rows="4" placeholder="Tell us about yourself...">{{ user.about|default:'' }}</textarea>
+            </div>
+
+            <div class="footer-btns">
+                <a href="{% url 'home' %}" class="btn btn-cancel">Cancel</a>
+                <button type="submit" class="btn btn-save">Save Changes</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function previewImg(event) {
+            const reader = new FileReader();
+            reader.onload = function(){
+                const output = document.getElementById('imagePreview');
+                output.src = reader.result;
+                output.style.display = 'inline-block';
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
+</body>
+</html>

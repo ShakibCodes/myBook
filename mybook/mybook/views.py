@@ -50,3 +50,15 @@ def home_view(request):
 def logout_view(request):
     logout(request)
     return redirect('login')
+
+login_required
+def edit_profile_view(request):
+    user = request.user
+    if request.method == "POST":
+        user.display_name = request.POST.get('display_name')
+        user.about = request.POST.get('about')
+        if 'profile_photo' in request.FILES:
+            user.profile_photo = request.FILES['profile_photo']
+        user.save()
+        return redirect('home')
+    return render(request, "edit_profile.html")
