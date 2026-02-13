@@ -62,3 +62,14 @@ def edit_profile_view(request):
         user.save()
         return redirect('home')
     return render(request, "edit_profile.html")
+
+
+@login_required
+def profile(request):
+    return render(request, "profile.html")
+
+
+
+# task:
+# home.html => profile.html
+# new home.html
