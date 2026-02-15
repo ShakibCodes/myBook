@@ -105,3 +105,11 @@ def folder_detail_view(request, folder_id):
 
     files = folder.files.all()
     return render(request, "folder_detail.html", {'folder': folder, 'files': files})
+
+@login_required
+def delete_folder_view(request, folder_id):
+    folder = get_object_or_404(Folder, id=folder_id, user=request.user)
+    if request.method == "POST":
+        folder.delete()
+        return redirect('home')
+    return redirect('home')

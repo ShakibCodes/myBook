@@ -17,5 +17,6 @@ urlpatterns = [
     path('profile/', views.profile_view, name='profile'),
     path('edit-profile/', views.edit_profile_view, name='edit_profile'),
     path('folder/<int:folder_id>/', views.folder_detail_view, name='folder_detail'),
+    path('delete-folder/<int:folder_id>/', views.delete_folder_view, name='delete_folder'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
