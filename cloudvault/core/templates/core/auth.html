@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CloudVault – {% if mode == 'signup' %}Create Account{% else %}Sign In{% endif %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #13131a;
+    --surface2: #1c1c28;
+    --border: #2a2a3d;
+    --accent: #7c6af7;
+    --accent2: #a78bfa;
+    --accent-glow: rgba(124,106,247,0.3);
+    --text: #f0f0f8;
+    --text-muted: #8888aa;
+    --error: #f87171;
+    --success: #34d399;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    overflow: hidden;
+  }
+  .left-panel {
+    flex: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px;
+    background: linear-gradient(135deg, #0d0d18 0%, #12122a 50%, #0d0d18 100%);
+    overflow: hidden;
+  }
+  .left-panel::before {
+    content: '';
+    position: absolute;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(124,106,247,0.15) 0%, transparent 70%);
+    top: -100px; left: -100px;
+    border-radius: 50%;
+    animation: pulse 6s ease-in-out infinite;
+  }
+  .left-panel::after {
+    content: '';
+    position: absolute;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(167,139,250,0.1) 0%, transparent 70%);
+    bottom: -50px; right: -50px;
+    border-radius: 50%;
+    animation: pulse 8s ease-in-out infinite reverse;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.2); opacity: 0.7; }
+  }
+  .brand {
+    position: relative; z-index: 1;
+    margin-bottom: 60px;
+  }
+  .brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+  .logo-icon {
+    width: 48px; height: 48px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+  }
+  .logo-text {
+    font-family: 'Syne', sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+  .tagline {
+    font-family: 'Syne', sans-serif;
+    font-size: 48px;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -2px;
+    margin-bottom: 20px;
+  }
+  .tagline span { color: var(--accent2); }
+  .tagline-sub {
+    color: var(--text-muted);
+    font-size: 16px;
+    line-height: 1.6;
+    max-width: 380px;
+  }
+  .features {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .feature-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+  .feature-icon {
+    width: 36px; height: 36px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .right-panel {
+    width: 480px;
+    background: var(--surface);
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px 50px;
+    overflow-y: auto;
+  }
+  .form-header { margin-bottom: 40px; }
+  .form-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 30px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    letter-spacing: -1px;
+  }
+  .form-sub { color: var(--text-muted); font-size: 14px; }
+  .form-sub a { color: var(--accent2); text-decoration: none; font-weight: 500; }
+  .form-sub a:hover { text-decoration: underline; }
+  .form-group { margin-bottom: 20px; }
+  .form-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 8px;
+  }
+  .form-input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    color: var(--text);
+    font-size: 15px;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+    outline: none;
+  }
+  .form-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+  .form-input.error { border-color: var(--error); }
+  .error-msg {
+    display: none;
+    color: var(--error);
+    font-size: 12px;
+    margin-top: 6px;
+  }
+  .error-msg.show { display: block; }
+  .submit-btn {
+    width: 100%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none;
+    border-radius: 12px;
+    padding: 15px;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 8px;
+    position: relative;
+    overflow: hidden;
+  }
+  .submit-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 25px var(--accent-glow); }
+  .submit-btn:active { transform: translateY(0); }
+  .submit-btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+  .global-error {
+    background: rgba(248,113,113,0.1);
+    border: 1px solid rgba(248,113,113,0.3);
+    border-radius: 10px;
+    padding: 12px 16px;
+    color: var(--error);
+    font-size: 13px;
+    margin-bottom: 16px;
+    display: none;
+  }
+  .global-error.show { display: block; }
+  .divider {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 12px;
+    margin: 20px 0;
+    position: relative;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: calc(50% - 20px);
+    height: 1px;
+    background: var(--border);
+  }
+  .divider::before { left: 0; }
+  .divider::after { right: 0; }
+
+  @media (max-width: 768px) {
+    .left-panel { display: none; }
+    .right-panel { width: 100%; padding: 40px 28px; min-height: 100vh; }
+    .form-title { font-size: 26px; }
+  }
+</style>
+</head>
+<body>
+<div class="left-panel">
+  <div class="brand">
+    <div class="brand-logo">
+      <div class="logo-icon">☁️</div>
+      <span class="logo-text">CloudVault</span>
+    </div>
+    <div class="tagline">Store.<br><span>Share.</span><br>Explore.</div>
+    <div class="tagline-sub">Your personal cloud vault — organize files, share folders, and discover what others are building.</div>
+    <div class="features">
+      <div class="feature-item"><div class="feature-icon">📁</div> Create folders & subfolders, upload anything</div>
+      <div class="feature-item"><div class="feature-icon">🔒</div> Full privacy control — public or private</div>
+      <div class="feature-item"><div class="feature-icon">🔍</div> Discover and explore other users' public vaults</div>
+    </div>
+  </div>
+</div>
+
+<div class="right-panel">
+  <div class="form-header">
+    <div class="form-title">{% if mode == 'signup' %}Create account{% else %}Welcome back{% endif %}</div>
+    <div class="form-sub">
+      {% if mode == 'signup' %}
+        Already have an account? <a href="/login/">Sign in</a>
+      {% else %}
+        New to CloudVault? <a href="/signup/">Create account</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="global-error" id="globalError"></div>
+
+  {% if mode == 'signup' %}
+  <div class="form-group">
+    <label class="form-label">Username (optional)</label>
+    <input type="text" class="form-input" id="username" placeholder="your_name">
+    <div class="error-msg" id="usernameError"></div>
+  </div>
+  {% endif %}
+
+  <div class="form-group">
+    <label class="form-label">Email address</label>
+    <input type="email" class="form-input" id="email" placeholder="you@example.com">
+    <div class="error-msg" id="emailError"></div>
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">Password</label>
+    <input type="password" class="form-input" id="password" placeholder="••••••••">
+    <div class="error-msg" id="passwordError"></div>
+  </div>
+
+  {% if mode == 'signup' %}
+  <div class="form-group">
+    <label class="form-label">Confirm password</label>
+    <input type="password" class="form-input" id="confirmPassword" placeholder="••••••••">
+    <div class="error-msg" id="confirmPasswordError"></div>
+  </div>
+  {% endif %}
+
+  <button class="submit-btn" id="submitBtn" onclick="handleSubmit()">
+    {% if mode == 'signup' %}Create Account{% else %}Sign In{% endif %}
+  </button>
+</div>
+
+<script>
+const MODE = '{{ mode }}';
+const CSRF = '{{ csrf_token }}';
+
+function showError(fieldId, msg) {
+  const input = document.getElementById(fieldId);
+  const err = document.getElementById(fieldId + 'Error');
+  if (input) input.classList.add('error');
+  if (err) { err.textContent = msg; err.classList.add('show'); }
+}
+function clearErrors() {
+  document.querySelectorAll('.form-input').forEach(i => i.classList.remove('error'));
+  document.querySelectorAll('.error-msg').forEach(e => { e.textContent = ''; e.classList.remove('show'); });
+  const ge = document.getElementById('globalError');
+  ge.textContent = ''; ge.classList.remove('show');
+}
+
+async function handleSubmit() {
+  clearErrors();
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = MODE === 'signup' ? 'Creating...' : 'Signing in...';
+
+  const body = {
+    email: document.getElementById('email').value,
+    password: document.getElementById('password').value,
+  };
+  if (MODE === 'signup') {
+    body.username = document.getElementById('username').value;
+    body.confirm_password = document.getElementById('confirmPassword').value;
+  }
+
+  try {
+    const res = await fetch(MODE === 'signup' ? '/signup/' : '/login/', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRFToken': CSRF},
+      body: Object.entries(body).map(([k,v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&'),
+    });
+    const data = await res.json();
+    if (data.success) {
+      window.location.href = data.redirect || '/home/';
+    } else {
+      const errors = data.errors || {};
+      if (errors.__all__) {
+        const ge = document.getElementById('globalError');
+        ge.textContent = errors.__all__;
+        ge.classList.add('show');
+      }
+      if (errors.email) showError('email', errors.email);
+      if (errors.password) showError('password', errors.password);
+      if (errors.confirm_password) showError('confirmPassword', errors.confirm_password);
+      if (errors.username) showError('username', errors.username);
+    }
+  } catch(e) {
+    const ge = document.getElementById('globalError');
+    ge.textContent = 'Something went wrong. Please try again.';
+    ge.classList.add('show');
+  }
+  btn.disabled = false;
+  btn.textContent = MODE === 'signup' ? 'Create Account' : 'Sign In';
+}
+
+document.querySelectorAll('.form-input').forEach(input => {
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') handleSubmit(); });
+});
+</script>
+</body>
+</html>

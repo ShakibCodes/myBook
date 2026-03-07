@@ -1,0 +1,379 @@
+{% extends 'core/base.html' %}
+{% block title %}Profile – CloudVault{% endblock %}
+{% block nav_profile %}active{% endblock %}
+{% block page_title %}Profile{% endblock %}
+
+{% block extra_head %}
+<style>
+  .profile-layout {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 24px;
+    max-width: 1000px;
+  }
+  @media(max-width:900px) {
+    .profile-layout { grid-template-columns: 1fr; }
+  }
+  .profile-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+  }
+  .profile-card-header {
+    padding: 32px;
+    text-align: center;
+    background: linear-gradient(135deg, rgba(124,106,247,0.1), rgba(167,139,250,0.05));
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .avatar-wrapper {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 16px;
+  }
+  .avatar-img {
+    width: 96px; height: 96px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 38px; font-weight: 700; color: white;
+    overflow: hidden;
+    border: 4px solid var(--border);
+    cursor: pointer;
+  }
+  .avatar-img img { width: 100%; height: 100%; object-fit: cover; }
+  .avatar-edit-btn {
+    position: absolute;
+    bottom: 2px; right: 2px;
+    width: 28px; height: 28px;
+    background: var(--accent);
+    border: 2px solid var(--surface);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; cursor: pointer;
+    transition: all 0.15s;
+  }
+  .avatar-edit-btn:hover { transform: scale(1.1); }
+  .profile-display-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px; font-weight: 800;
+    margin-bottom: 4px; letter-spacing: -0.5px;
+  }
+  .profile-email-display { color: var(--text-muted); font-size: 13px; margin-bottom: 12px; }
+  .profile-bio-display {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    font-style: italic;
+  }
+  .profile-card-body { padding: 24px; }
+  .profile-stats {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 12px; margin-bottom: 0;
+  }
+  .stat-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+  }
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 26px; font-weight: 800;
+    color: var(--accent2);
+  }
+  .stat-label { font-size: 11px; color: var(--text-faint); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* Right column */
+  .right-col { display: flex; flex-direction: column; gap: 20px; }
+  .section-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+  }
+  .section-card-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .section-card-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px; font-weight: 700;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-card-body { padding: 24px; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media(max-width:600px) { .form-row { grid-template-columns: 1fr; } }
+  
+  textarea.form-input { resize: vertical; min-height: 80px; }
+
+  /* Settings */
+  .setting-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .setting-row:last-child { border-bottom: none; }
+  .setting-info { flex: 1; }
+  .setting-label { font-size: 14px; font-weight: 500; }
+  .setting-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+  /* Toggle */
+  .toggle {
+    position: relative;
+    width: 48px; height: 26px;
+    flex-shrink: 0;
+  }
+  .toggle input { opacity: 0; width: 0; height: 0; }
+  .toggle-slider {
+    position: absolute; inset: 0;
+    background: var(--surface3);
+    border-radius: 26px;
+    cursor: pointer;
+    transition: 0.2s;
+    border: 1px solid var(--border);
+  }
+  .toggle-slider::before {
+    content: '';
+    position: absolute;
+    height: 18px; width: 18px;
+    left: 3px; top: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: 0.2s;
+  }
+  .toggle input:checked + .toggle-slider { background: var(--accent); border-color: var(--accent); }
+  .toggle input:checked + .toggle-slider::before { transform: translateX(22px); }
+
+  .danger-zone {
+    background: rgba(248,113,113,0.05);
+    border: 1px solid rgba(248,113,113,0.2);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .danger-title { color: var(--error); font-weight: 600; font-size: 14px; margin-bottom: 6px; }
+  .danger-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-layout">
+  <!-- Left column: profile card -->
+  <div>
+    <div class="profile-card">
+      <div class="profile-card-header">
+        <div class="avatar-wrapper">
+          <div class="avatar-img" onclick="document.getElementById('avatarInput').click()">
+            {% if request.user.avatar %}
+              <img src="{{ request.user.avatar.url }}" alt="avatar" id="avatarPreview">
+            {% else %}
+              <span id="avatarInitial">{{ request.user.get_display_name|slice:":1"|upper }}</span>
+            {% endif %}
+          </div>
+          <div class="avatar-edit-btn" onclick="document.getElementById('avatarInput').click()">✏️</div>
+        </div>
+        <div class="profile-display-name" id="displayName">{{ request.user.get_display_name }}</div>
+        <div class="profile-email-display">{{ request.user.email }}</div>
+        <div class="profile-bio-display" id="displayBio">
+          {% if request.user.bio %}{{ request.user.bio }}{% else %}No bio yet{% endif %}
+        </div>
+      </div>
+      <div class="profile-card-body">
+        <div class="profile-stats">
+          <div class="stat-box">
+            <div class="stat-num">{{ request.user.get_total_folders_count }}</div>
+            <div class="stat-label">Total Folders</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">{{ request.user.get_public_folders_count }}</div>
+            <div class="stat-label">Public</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right column -->
+  <div class="right-col">
+    <!-- Edit Profile -->
+    <div class="section-card">
+      <div class="section-card-header">
+        <div class="section-card-title">✏️ Edit Profile</div>
+      </div>
+      <div class="section-card-body">
+        <input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="previewAvatar(this)">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Username</label>
+            <input type="text" class="form-input" id="editUsername" value="{{ request.user.username }}" placeholder="your_name" maxlength="50">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="text" class="form-input" value="{{ request.user.email }}" disabled style="opacity:0.5;cursor:not-allowed;">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Bio</label>
+          <textarea class="form-input" id="editBio" placeholder="Tell people about yourself..." maxlength="300">{{ request.user.bio }}</textarea>
+          <div style="font-size:11px;color:var(--text-faint);margin-top:4px;text-align:right;" id="bioCounter">{{ request.user.bio|length }}/300</div>
+        </div>
+        <div id="profileError" style="color:var(--error);font-size:13px;display:none;margin-bottom:12px;"></div>
+        <button class="btn btn-primary" onclick="saveProfile()">Save Changes</button>
+      </div>
+    </div>
+
+    <!-- Settings -->
+    <div class="section-card">
+      <div class="section-card-header">
+        <div class="section-card-title">⚙️ Settings</div>
+      </div>
+      <div class="section-card-body" style="padding:0 24px;">
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="setting-label">Dark Mode</div>
+            <div class="setting-desc">Toggle between light and dark theme</div>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="themeCheck" onchange="toggleThemeFromToggle(this)">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="setting-label">Public Profile</div>
+            <div class="setting-desc">Your profile is always searchable by others</div>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" checked disabled>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Danger Zone -->
+    <div class="section-card">
+      <div class="section-card-header">
+        <div class="section-card-title" style="color:var(--error);">⚠️ Danger Zone</div>
+      </div>
+      <div class="section-card-body">
+        <div class="danger-zone">
+          <div class="danger-title">Delete Account</div>
+          <div class="danger-desc">Permanently delete your account, all folders, and all files. This action cannot be undone.</div>
+          <button class="btn btn-danger" onclick="openModal('deleteAccountModal')">Delete My Account</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Account Modal -->
+<div class="modal-backdrop" id="deleteAccountModal">
+  <div class="modal">
+    <div class="modal-title">⚠️ Delete Account</div>
+    <div style="font-size:14px;color:var(--text-muted);margin-bottom:16px;line-height:1.6;">
+      This will permanently delete your account and all your data. Type <strong>DELETE</strong> to confirm.
+    </div>
+    <div class="form-group">
+      <input type="text" class="form-input" id="deleteConfirmInput" placeholder="Type DELETE">
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('deleteAccountModal')">Cancel</button>
+      <button class="btn btn-danger" onclick="deleteAccount()">Delete Forever</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// Sync theme toggle with current theme
+(function() {
+  const t = localStorage.getItem('theme') || 'dark';
+  const check = document.getElementById('themeCheck');
+  if (check) check.checked = t === 'dark';
+})();
+
+function toggleThemeFromToggle(cb) {
+  const newTheme = cb.checked ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+  document.getElementById('themeToggle').textContent = newTheme === 'dark' ? '🌙' : '☀️';
+}
+
+// Bio counter
+document.getElementById('editBio').addEventListener('input', function() {
+  document.getElementById('bioCounter').textContent = this.value.length + '/300';
+});
+
+// Avatar preview
+function previewAvatar(input) {
+  if (!input.files[0]) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const wrap = document.querySelector('.avatar-img');
+    const init = document.getElementById('avatarInitial');
+    if (init) init.style.display = 'none';
+    let img = wrap.querySelector('img');
+    if (!img) { img = document.createElement('img'); img.id = 'avatarPreview'; wrap.appendChild(img); }
+    img.src = e.target.result;
+    img.style.display = 'block';
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+async function saveProfile() {
+  const fd = new FormData();
+  fd.append('username', document.getElementById('editUsername').value);
+  fd.append('bio', document.getElementById('editBio').value);
+  const avatarFile = document.getElementById('avatarInput').files[0];
+  if (avatarFile) fd.append('avatar', avatarFile);
+
+  const res = await fetch('/api/profile/update/', {
+    method: 'POST',
+    headers: { 'X-CSRFToken': getCsrf() },
+    body: fd,
+  });
+  const data = await res.json();
+  if (data.success) {
+    // Update sidebar and display name
+    const uname = document.getElementById('editUsername').value || '{{ request.user.email|escapejs }}'.split('@')[0];
+    document.getElementById('displayName').textContent = uname;
+    document.getElementById('displayBio').textContent = document.getElementById('editBio').value || 'No bio yet';
+    document.querySelector('.user-name').textContent = uname;
+    // Update sidebar avatar
+    if (avatarFile) {
+      const sideAv = document.querySelector('.sidebar-footer .user-avatar');
+      if (sideAv) {
+        const img = sideAv.querySelector('img') || document.createElement('img');
+        img.src = document.querySelector('.avatar-img img').src;
+        img.style.cssText = 'width:100%;height:100%;object-fit:cover;';
+        sideAv.innerHTML = '';
+        sideAv.appendChild(img);
+      }
+    }
+    showToast('Profile updated!');
+  } else {
+    const err = document.getElementById('profileError');
+    err.textContent = Object.values(data.errors || {}).join(', ') || 'Failed to save';
+    err.style.display = 'block';
+    setTimeout(() => err.style.display = 'none', 4000);
+  }
+}
+
+async function deleteAccount() {
+  if (document.getElementById('deleteConfirmInput').value !== 'DELETE') {
+    showToast('Type DELETE to confirm', 'error');
+    return;
+  }
+  const data = await apiPost('/api/profile/delete/', {});
+  if (data.success) {
+    window.location.href = data.redirect || '/login/';
+  } else showToast('Failed', 'error');
+}
+</script>
+{% endblock %}

@@ -1,0 +1,257 @@
+{% extends 'core/base.html' %}
+{% block title %}{{ profile_user.get_display_name }} – CloudVault{% endblock %}
+{% block nav_explore %}active{% endblock %}
+{% block page_title %}{{ profile_user.get_display_name }}'s Vault{% endblock %}
+
+{% block extra_head %}
+<style>
+  .profile-header {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .profile-header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+  }
+  .profile-avatar {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px; font-weight: 700; color: white;
+    flex-shrink: 0;
+    overflow: hidden;
+    border: 3px solid var(--border);
+  }
+  .profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .profile-info { flex: 1; }
+  .profile-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 24px; font-weight: 800; margin-bottom: 4px;
+    letter-spacing: -0.5px;
+  }
+  .profile-email { color: var(--text-muted); font-size: 13px; margin-bottom: 10px; }
+  .profile-bio { font-size: 14px; color: var(--text-muted); line-height: 1.5; max-width: 500px; }
+  .profile-stats {
+    display: flex; gap: 24px; flex-wrap: wrap;
+    margin-top: 16px;
+  }
+  .profile-stat { text-align: center; }
+  .profile-stat-num { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; }
+  .profile-stat-label { font-size: 11px; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.5px; }
+
+  .back-link {
+    display: inline-flex; align-items: center; gap: 8px;
+    color: var(--text-muted); text-decoration: none;
+    font-size: 13px; font-weight: 500;
+    margin-bottom: 20px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all 0.15s;
+  }
+  .back-link:hover { background: var(--surface2); color: var(--text); }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .breadcrumb a { color: var(--accent2); text-decoration: none; }
+  .breadcrumb a:hover { text-decoration: underline; }
+  .breadcrumb-sep { color: var(--text-faint); }
+
+  .folder-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+  .folder-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    overflow: hidden;
+  }
+  .folder-card:hover { border-color: var(--border2); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+  .folder-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--folder-color, var(--accent));
+    border-radius: 16px 16px 0 0;
+  }
+  .folder-icon { font-size: 36px; margin-bottom: 12px; display: block; }
+  .folder-name { font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .folder-meta { display: flex; justify-content: flex-end; margin-top: 8px; }
+
+  .file-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+  }
+  .file-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    display: flex; align-items: center; gap: 12px;
+    transition: all 0.2s;
+  }
+  .file-card:hover { border-color: var(--border2); box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+  .file-icon-wrap {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    background: var(--surface2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; flex-shrink: 0; overflow: hidden;
+  }
+  .file-icon-wrap img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
+  .file-info { flex: 1; min-width: 0; }
+  .file-name { font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .file-size { font-size: 11px; color: var(--text-faint); margin-top: 2px; }
+  .download-btn {
+    padding: 6px 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--text);
+    white-space: nowrap;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .download-btn:hover { background: var(--surface3); border-color: var(--border2); }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px;
+    color: var(--text-muted); margin-bottom: 14px;
+  }
+  .empty-state { text-align: center; padding: 48px 20px; color: var(--text-muted); }
+  .empty-icon { font-size: 40px; margin-bottom: 12px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<a href="/explore/" class="back-link">← Back to Explore</a>
+
+<!-- Profile Header -->
+<div class="profile-header">
+  <div class="profile-avatar">
+    {% if profile_user.avatar %}
+      <img src="{{ profile_user.avatar.url }}" alt="{{ profile_user.get_display_name }}">
+    {% else %}
+      {{ profile_user.get_display_name|slice:":1"|upper }}
+    {% endif %}
+  </div>
+  <div class="profile-info">
+    <div class="profile-name">{{ profile_user.get_display_name }}</div>
+    <div class="profile-email">{{ profile_user.email }}</div>
+    {% if profile_user.bio %}
+    <div class="profile-bio">{{ profile_user.bio }}</div>
+    {% endif %}
+    <div class="profile-stats">
+      <div class="profile-stat">
+        <div class="profile-stat-num">{{ folder_count }}</div>
+        <div class="profile-stat-label">Public Folders</div>
+      </div>
+      <div class="profile-stat">
+        <div class="profile-stat-num">{{ profile_user.date_joined|date:"Y" }}</div>
+        <div class="profile-stat-label">Joined</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Breadcrumb for subfolders -->
+{% if breadcrumb %}
+<div class="breadcrumb">
+  <a href="/u/{{ profile_user.id }}/">📂 {{ profile_user.get_display_name }}'s Vault</a>
+  {% for item in breadcrumb %}
+    <span class="breadcrumb-sep">›</span>
+    {% if not forloop.last %}
+      <a href="/u/{{ profile_user.id }}/?folder={{ item.id }}">{{ item.name }}</a>
+    {% else %}
+      <span>{{ item.name }}</span>
+    {% endif %}
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- Folders -->
+{% if folders %}
+<div class="section-title">📁 Folders ({{ folders|length }})</div>
+<div class="folder-grid">
+  {% for folder in folders %}
+  <a href="/u/{{ profile_user.id }}/?folder={{ folder.id }}" class="folder-card" style="--folder-color: {{ folder.color }}">
+    <span class="folder-icon">📂</span>
+    <div class="folder-name">{{ folder.name }}</div>
+    <div class="folder-meta">
+      <span style="font-size:11px;color:var(--text-faint);">{{ folder.created_at|date:"M d, Y" }}</span>
+    </div>
+  </a>
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- Files (inside a folder) -->
+{% if current_folder %}
+{% if files %}
+<div class="section-title" style="margin-top:24px;">📄 Files ({{ files|length }})</div>
+<div class="file-list">
+  {% for file in files %}
+  <div class="file-card">
+    <div class="file-icon-wrap">
+      {% if file.is_image %}
+        <img src="{{ file.file.url }}" alt="{{ file.name }}" onerror="this.parentElement.textContent='🖼️'">
+      {% else %}
+        {{ file.get_icon }}
+      {% endif %}
+    </div>
+    <div class="file-info">
+      <div class="file-name" title="{{ file.name }}">{{ file.name }}</div>
+      <div class="file-size">{{ file.get_size_display }}</div>
+    </div>
+    <a href="/api/files/{{ file.id }}/download/" class="download-btn">⬇️</a>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+  <div class="empty-icon">📄</div>
+  <div>No files in this folder</div>
+</div>
+{% endif %}
+{% endif %}
+
+{% if not folders and not current_folder %}
+<div class="empty-state">
+  <div class="empty-icon">📭</div>
+  <div style="font-size:18px;font-weight:700;font-family:'Syne',sans-serif;margin-bottom:8px;color:var(--text);">No public folders</div>
+  <div>This user hasn't shared any folders publicly yet.</div>
+</div>
+{% endif %}
+{% endblock %}
